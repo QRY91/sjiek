@@ -9,7 +9,7 @@ TEST_REPO_PATH="$PROJECT_ROOT_DIR/$TEST_REPO_DIR_NAME"
 SJIEK_DEFAULT_OUTPUT_DIR_HOME="$HOME/llm_context_diffs"
 SJIEK_FALLBACK_OUTPUT_DIR_RELATIVE="$PROJECT_ROOT_DIR/sjiek_diffs" # Relative to where sjiek might be run if home fails
 
-echo "--- Sjiek Test Environment Setup ---"
+echo "--- sjiek test environment setup ---"
 
 # Clean up previous test repo if it exists
 if [ -d "$TEST_REPO_PATH" ]; then
