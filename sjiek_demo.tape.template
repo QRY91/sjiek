@@ -1,0 +1,55 @@
+# sjiek_demo.tape.template
+# Demo of sjiek interactive usage
+
+Output sjiek_demo.gif
+
+Set Theme "Charm"
+Set FontFamily "JetBrains Mono"
+Set FontSize 18
+Set Width 1200
+Set Height 750
+Set TypingSpeed 100ms
+Set LoopOffset "20%"
+
+Hide
+Type "mkdir -p /tmp/sjiek_vhs_demo && cd /tmp/sjiek_vhs_demo" Enter Sleep 500ms
+Type "rm -rf ./* .git" Enter Sleep 500ms
+Type "git init -b main" Enter Sleep 500ms
+Type "git config user.name 'sjiek demo'" Enter Sleep 500ms
+Type "git config user.email 'demo@example.com'" Enter Sleep 500ms
+Type "echo 'Hello World!' > file1.txt" Enter Sleep 500ms
+Type "git add file1.txt && git commit -m 'Initial commit'" Enter Sleep 1s
+Type "echo 'Unstaged change.' >> file1.txt" Enter Sleep 500ms
+Type "clear" Enter Sleep 500ms
+Show
+
+Type "sjiek" Sleep 500ms Enter
+Sleep 1s
+
+# Diff Type: Select "unstaged"
+Down@200ms Sleep 500ms
+Down@200ms Sleep 500ms
+Enter@200ms Sleep 1s
+
+# Output Directory: Accept default (or use Ctrl+A Backspace if you want to type a new one)
+%%OUTPUT_DIR_INTERACTION%%
+Enter@200ms Sleep 1s
+
+# Filename: Clear default and type "demo_context.txt"
+%%FILENAME_BACKSPACES%%
+Type "demo_context.txt" Sleep 500ms
+Enter@200ms Sleep 1s
+
+# Timestamp: Yes
+Type "y" Sleep 500ms
+Enter@200ms Sleep 1s
+
+# Copy to Clipboard: No
+Right@200ms Sleep 500ms
+Enter@200ms Sleep 1s
+Sleep 2s
+
+Type "ls -l ./output_diffs/" Sleep 500ms Enter # Assuming output dir was set to ./output_diffs
+Sleep 1.5s
+Type "cat ./output_diffs/demo_context_*.txt" Sleep 500ms Enter
+Sleep 4s
