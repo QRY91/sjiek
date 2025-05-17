@@ -1,10 +1,16 @@
-# Sjiek 🪄
+# sjiek 🪄
 
-> _"Sjiek: Context for AI to chew on"_
+> _"🫦 chew on this 🫦"_
 
-Sjiek (Dutch/Flemish for "gum," and a homonym for "chic/fancy") is a command-line tool designed to help you quickly generate `git diff` outputs of your current code changes. It saves these diffs to a file and can copy them to your clipboard, making it easy to provide context to Large Language Models (LLMs) or share your work-in-progress.
+`sjiek` is a command-line tool designed to help you quickly generate `git diff` outputs of your current code changes. It saves these diffs to a file and can copy them to your clipboard, making it easy to provide context to Large Language Models (LLMs) or share your work-in-progress.
 
-It features an interactive mode powered by [Charm Gum](https://github.com/charmbracelet/gum) for a user-friendly experience, but can also be controlled directly via command-line flags for scripting and automation.
+It features an optional interactive mode powered by [Charm Gum](https://github.com/charmbracelet/gum) for a user-friendly experience, but defaults to fast, non-interactive operation for quick use.
+
+*(**sjiek** is Dutch/Flemish for "gum" and a homonym for the French "chic." It's pronounced "sheek" or /ʃik/.)*
+
+## Demo
+
+![sjiek Interactive Demo](./assets/sjiek_demo.gif)
 
 ## Features
 
@@ -12,17 +18,18 @@ It features an interactive mode powered by [Charm Gum](https://github.com/charmb
     *   All uncommitted changes (staged and unstaged).
     *   Only staged changes (what's ready for commit).
     *   Only unstaged changes (current work not yet staged).
+*   Fast non-interactive default operation.
+*   Optional user-friendly interactive mode using `gum` for selecting options on-the-fly.
 *   Save diff output to a configurable directory and filename.
 *   Optionally add a timestamp to filenames for easy versioning of diffs.
 *   Optionally copy the diff content directly to the system clipboard.
-*   User-friendly interactive mode using `gum` for selecting options on-the-fly.
-*   Direct command-line flag operation for quick, non-interactive use.
+*   Optional startup intro animation (because why not?).
 *   Built as a single, portable binary with Go.
 
 ## Requirements
 
-*   **Git:** Sjiek operates on Git repositories and uses `git` commands.
-*   **Gum (for interactive mode):** [Charm Gum](https://github.com/charmbracelet/gum) must be installed and accessible in your system's PATH for the interactive (`-i` or default no-flag) mode to function with its Terminal User Interface (TUI).
+*   **Git:** sjiek operates on Git repositories and uses `git` commands.
+*   **Gum (for interactive mode & intro):** [Charm Gum](https://github.com/charmbracelet/gum) must be installed and accessible in your system's PATH for the interactive (`-i`) mode and the startup intro (`--intro`) to function with their TUIs.
 *   **Shell (`sh`):** Required by the interactive mode's `gum` integration for `gum choose` and `gum input`. This is standard on Linux and macOS.
 *   **(Optional) Clipboard utility:** For the clipboard copy feature (`-c`) to work effectively, your operating system needs a clipboard utility that `github.com/atotto/clipboard` (the Go library used) can interface with.
     *   **Linux/X11:** `xclip` or `xsel` (e.g., `sudo apt install xclip`)
@@ -34,7 +41,7 @@ It features an interactive mode powered by [Charm Gum](https://github.com/charmb
 
 ### Using `go install` (Recommended)
 
-Once the repository is public on GitHub (e.g., `github.com/yourusername/sjiek`):
+(Replace `yourusername` with your actual GitHub username)
 ```bash
 go install github.com/yourusername/sjiek@latest
 ```
@@ -49,21 +56,22 @@ This command will download the source code, compile it, and place the `sjiek` bi
     cd sjiek
     ```
 2.  **Build the binary:**
+    (Consider using the `build_and_install.sh` script provided in the repository for convenience)
     ```bash
     go build -o sjiek .
     ```
     This creates an executable file named `sjiek` in the current directory.
 3.  **Move the binary to a directory in your PATH:**
-    For example, to `~/.local/bin` (a common place for user-installed binaries on Linux):
+    For example, to `~/.local/bin`:
     ```bash
     mkdir -p ~/.local/bin
     mv sjiek ~/.local/bin/
     ```
-    *(Ensure `~/.local/bin` is in your PATH. You might need to add `export PATH="$HOME/.local/bin:$PATH"` to your shell's configuration file, like `~/.bashrc` or `~/.zshrc`, and then restart your shell or run `source ~/.bashrc`.)*
+    *(Ensure `~/.local/bin` is in your PATH.)*
 
 ## Usage
 
-Sjiek can be run interactively or directly via command-line flags. If no flags are provided, it defaults to interactive mode (requires `gum`).
+`sjiek` defaults to a fast, non-interactive mode using pre-set defaults. Use the `-i` flag for an interactive experience.
 
 ```
 sjiek [flags]
@@ -72,56 +80,80 @@ sjiek [flags]
 ### Flags
 
 *   `-o <directory>`: Specifies the output directory for the diff file.
-    *   Default: `~/llm_context_diffs` (or `./sjiek_diffs` if the home directory is not accessible).
+    *   Default: `~/llm_context_diffs` (or `./sjiek_diffs` if home is not accessible).
 *   `-n <filename>`: Sets the filename for the diff file.
     *   Default: `current_diff.txt`.
 *   `--diff-type <type>`: Determines the type of git diff to generate.
     *   Options:
-        *   `all` (default): Shows all uncommitted changes (both staged and unstaged). Equivalent to `git diff HEAD`.
-        *   `staged`: Shows only staged changes (what will be included in the next commit). Equivalent to `git diff --staged`.
-        *   `unstaged`: Shows only unstaged changes (changes in the working directory not yet staged). Equivalent to `git diff`.
+        *   `all` (default): All uncommitted changes (staged & unstaged).
+        *   `staged`: Only staged changes.
+        *   `unstaged`: Only unstaged changes.
 *   `-t`: Appends a timestamp (e.g., `_YYYYMMDD_HHMMSS`) to the filename.
 *   `-c`: Copies the generated diff content to the system clipboard.
-*   `-i`: Explicitly forces Sjiek to run in interactive mode. This is useful if you've set other flags but still want to be prompted for any remaining options.
-*   `--help`: Displays the help message with all available flags.
+*   `-i`: Run in interactive mode using `gum` to select options.
+*   `--intro`: Show the startup intro animation (requires `gum`).
+*   `--help`: Displays this help message.
+
+### Default (Non-Interactive) Mode
+
+Running `sjiek` without any flags (or with specific operational flags like `-n`, `-o`, `-c`, `-t`, `--diff-type` but *without* `-i`) will execute immediately using default values or the flags provided.
+
+```bash
+# Fast diff with all defaults (all changes, to ~/llm_context_diffs/current_diff.txt)
+sjiek
+
+# Diff all changes, copy to clipboard, use default filename & output dir
+sjiek -c
+
+# Diff staged changes, specific filename, default output dir
+sjiek --diff-type staged -n my_staged_changes.diff
+```
 
 ### Interactive Mode
 
-Running `sjiek` without any operational flags (or by using the `-i` flag) will launch the interactive mode:
+To use the interactive TUI for selecting options, use the `-i` flag:
 
 ```bash
-sjiek
-# or
 sjiek -i
 ```
+If you also want the startup intro with interactive mode:
+```bash
+sjiek -i --intro
+```
 
-In this mode, you will be guided by `gum` prompts to:
+In interactive mode, you will be guided by `gum` prompts to:
 1.  Select the desired diff type.
-2.  Enter the output directory (or press Enter to use the default).
-3.  Enter the filename (or press Enter for the default).
-4.  Confirm whether to add a timestamp to the filename.
-5.  Confirm whether to copy the diff to the clipboard.
+2.  Enter the output directory.
+3.  Enter the filename.
+4.  Confirm timestamping.
+5.  Confirm copying to clipboard.
 
 ### Examples
 
-1.  **Run interactively for guided setup:**
+1.  **Quick default diff (all changes, default file/location):**
     ```bash
     sjiek
     ```
 
-2.  **Generate a diff of all changes, name it `latest_updates.diff`, and copy to clipboard:**
+2.  **Run interactively for guided setup:**
+    ```bash
+    sjiek -i
+    ```
+
+3.  **Show intro then run interactively:**
+    ```bash
+    sjiek --intro 
+    ```
+    *(Note: If only `--intro` is provided, `sjiek` will run interactively after the intro.)*
+
+4.  **Generate a diff of all changes, name it `latest_updates.diff`, copy to clipboard (non-interactive):**
     ```bash
     sjiek -n latest_updates.diff -c
     ```
 
-3.  **Get only staged changes, save to a timestamped file in a custom directory `~/project_diffs/`:**
+5.  **Get only staged changes, save to a timestamped file in `~/project_diffs/` (non-interactive):**
     ```bash
     sjiek --diff-type staged -o "~/project_diffs/" -t
-    ```
-
-4.  **Get unstaged changes with a specific filename, without copying or timestamping:**
-    ```bash
-    sjiek --diff-type unstaged -n feature_x_WIP.patch
     ```
 
 ## Development
@@ -131,7 +163,7 @@ This project is built with Go.
 *   Clone the repository.
 *   Ensure Go (version 1.20 or newer is recommended) is installed.
 *   Fetch dependencies: `go mod tidy`
-*   Build: `go build -o sjiek .`
+*   Build: `go build -o sjiek .` (or use `./build_and_install.sh`)
 *   Run tests (if any are added in the future): `go test ./...`
 
 ## License
