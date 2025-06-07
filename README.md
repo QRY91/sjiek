@@ -8,6 +8,18 @@ It features an optional interactive mode powered by [Charm Gum](https://github.c
 
 *(**sjiek** is Dutch/Flemish for "gum" and a homonym for the French "chic." It's pronounced "sheek" or /ʃik/.)*
 
+## 🤖 AI Collaboration Transparency
+
+This project documentation and development has been enhanced through systematic AI collaboration following QRY Labs methodology:
+
+- **Human-Centered Development**: All core functionality, architecture decisions, and strategic direction remain human-controlled
+- **AI-Enhanced Documentation**: AI assistants help improve documentation quality and systematic presentation
+- **Transparent Attribution**: AI collaboration is acknowledged openly as part of QRY's commitment to ethical technology use
+- **LLM Context Generation**: sjiek specifically facilitates AI collaboration by generating git diff context for LLMs
+- **Systematic Methodology**: AI collaboration follows structured procedures documented in `/ai/` directory
+
+**Core Principle**: AI enhances human capability rather than replacing human judgment. sjiek exemplifies this by enabling better AI collaboration through systematic context generation while keeping humans in control of code changes and strategic decisions.
+
 ## Demo
 
 ![sjiek Interactive Demo](./assets/sjiek_demo.gif)
