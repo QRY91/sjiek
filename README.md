@@ -1,3 +1,5 @@
+> **Archived 2026-08-21.** Built for the 2025 workflow of hand-carrying `git diff` into a chat window — a problem agentic coding tools have since removed. The genesis project of the QRY tool family; the demo gif is the best part. Read-only from here.
+
 # sjiek 🪄
 
 > _"🫦 chew on this 🫦"_
